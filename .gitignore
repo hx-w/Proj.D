@@ -1,0 +1,74 @@
+unittests
+*.exp
+*.lib
+Debug/
+Release/
+*egg-info/
+dist/
+.idea/
+.vs/
+CMakeSettings.json
+*.pdb
+*.ilk
+test*
+freetype/
+freetype_back/
+cmake-build-debug/
+# imgui.ini
+*.pdf
+models/
+*.pkl
+*.csv
+*.tga
+main
+main_table
+main_test
+main_test.cpp
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+__pycache__/
+# Prerequisites
+*.d
+.vscode/
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+# *.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+# *.lib
+
+# Executables
+*.exe
+*.out
+*.app
+.DS_Store
+build/
+imgui.ini
