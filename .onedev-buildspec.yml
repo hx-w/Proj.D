@@ -1,0 +1,19 @@
+version: 25
+jobs:
+- name: Sync to GitHub
+  jobExecutor: executor
+  steps:
+  - !PushRepository
+    name: push to GitHub
+    remoteUrl: https://github.com/hx-w/Proj.D
+    passwordSecret: access-token
+    force: false
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  triggers:
+  - !BranchUpdateTrigger
+    branches: master
+  - !TagCreateTrigger {}
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  timeout: 3600
