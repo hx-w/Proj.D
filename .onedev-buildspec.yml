@@ -9,6 +9,14 @@ jobs:
     withSubmodules: false
     cloneDepth: 1
     condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  - !CommandStep
+    name: build cmake
+    runInContainer: false
+    interpreter: !DefaultInterpreter
+      commands:
+      - cmake --version
+    useTTY: false
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
   paramSpecs:
   - !TextParam
     name: os
