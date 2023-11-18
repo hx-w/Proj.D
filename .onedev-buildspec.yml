@@ -6,6 +6,7 @@ jobs:
   - !PushRepository
     name: push to GitHub
     remoteUrl: https://github.com/hx-w/Proj.D
+    userName: hx-w
     passwordSecret: access-token
     force: false
     condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
