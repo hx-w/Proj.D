@@ -1,0 +1,31 @@
+version: 25
+jobs:
+- name: build windows exe
+  steps:
+  - !CheckoutStep
+    name: checkout locally
+    cloneCredential: !DefaultCredential {}
+    withLfs: false
+    withSubmodules: false
+    cloneDepth: 1
+    condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
+  paramSpecs:
+  - !TextParam
+    name: os
+    description: Operating system
+    allowEmpty: false
+    multiline: false
+  triggers:
+  - !BranchUpdateTrigger
+    branches: master
+    projects: DentalCAD
+    params:
+    - name: os
+      valuesProvider: !SpecifiedValues
+        values:
+        - - Windows
+      secret: false
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  timeout: 3600
