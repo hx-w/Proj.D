@@ -2,17 +2,16 @@
 
 list(APPEND LIBS INFRASTRUCTURE)
 
+list(APPEND OS_ISSUES)
+if (APPLE)
+    list(APPEND OS_ISSUES "-framework IOKit" "-framework Cocoa" "-framework OpenGL")
+endif()
+
 include_directories(${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME})
 
 file(GLOB_RECURSE ${PROJECT_NAME}_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
-add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${${PROJECT_NAME}_SRCS})
+add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${${PROJECT_NAME}_SRCS}
+        ../include/DentalCAD/meshlib/mesh_data.h)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPS} ${LIBS})
-
-# Checks if OSX and links appropriate frameworks (only required on MacOS)
-if (APPLE)
-    target_link_libraries(${PROJECT_NAME} "-framework IOKit")
-    target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
-    target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
-endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPS} ${LIBS} ${OS_ISSUES})

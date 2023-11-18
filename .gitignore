@@ -71,4 +71,5 @@ __pycache__/
 *.app
 .DS_Store
 build/
+build-debug/
 imgui.ini
