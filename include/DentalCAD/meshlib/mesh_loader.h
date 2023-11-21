@@ -5,11 +5,14 @@
 #ifndef DENTALCAD_MESH_LOADER_H
 #define DENTALCAD_MESH_LOADER_H
 
+#include <memory>
 #include <string>
 #include <vector>
 
 namespace DentalLib {
     class DlMesh; // mesh_data.h
+    using Ptr_DlMesh = std::shared_ptr<DlMesh>;
+
     enum class MeshLoadStatus {
         Success       = 0x00,
         FileNotFound  = 0x01,
@@ -27,7 +30,7 @@ namespace DentalLib {
          * @param status [out] -> refer to MeshLoadStatus. no error raise.
          * @return DentalLib mesh.
          */
-        static DlMesh load(const std::string & /* filename */, MeshLoadStatus & /* status */);
+        static Ptr_DlMesh load(const std::string & /* filename */, MeshLoadStatus & /* status */);
 
         /**
          * @param str [in] string to be split.
@@ -51,7 +54,7 @@ namespace DentalLib {
         /**
          * Load *.obj file to DlMesh
          */
-        static DlMesh load(const std::string & /* filename */, MeshLoadStatus & /* status */);
+        static Ptr_DlMesh load(const std::string & /* filename */, MeshLoadStatus & /* status */);
     };
 
     class PlyLoader : public MeshLoader {
@@ -59,7 +62,7 @@ namespace DentalLib {
         /**
          * Load *.obj file to DlMesh
          */
-        static DlMesh load(const std::string & /* filename */, MeshLoadStatus & /* status */);
+        static Ptr_DlMesh load(const std::string & /* filename */, MeshLoadStatus & /* status */);
     };
 }
 

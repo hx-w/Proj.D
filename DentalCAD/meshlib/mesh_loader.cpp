@@ -51,10 +51,10 @@ namespace DentalLib {
         }
     }
 
-    DlMesh MeshLoader::load(const std::string &filename, MshT &status) {
+    Ptr_DlMesh MeshLoader::load(const std::string &filename, MshT &status) {
         if (!FileExists(filename.c_str())) {
             status = MshT::FileNotFound;
-            return DlMesh({});
+            return nullptr;
         }
 
         // check file extension and process in different methods
@@ -64,20 +64,20 @@ namespace DentalLib {
             return PlyLoader::load(filename, status);
         } else {
             status = MeshLoadStatus::FileExtErr;
-            return DlMesh({});
+            return nullptr;
         }
     }
 
-    DlMesh ObjLoader::load(const std::string &filename, MshT &status) {
+    Ptr_DlMesh ObjLoader::load(const std::string &filename, MshT &status) {
         if (!FileExists(filename.c_str())) {
             status = MshT::FileNotFound;
-            return DlMesh({});
+            return nullptr;
         }
 
         std::ifstream file(filename);
         if (!file.is_open()) {
             status = MshT::FileOpenErr;
-            return DlMesh({});
+            return nullptr;
         }
 
         vector<glm::vec3> vertices;
@@ -119,47 +119,46 @@ namespace DentalLib {
         catch (std::exception& e) {
             file.close();
             status = MshT::UnexpectedErr;
-            return DlMesh({});
+            return nullptr;
         }
 
         // construct normal, not very good :(
-        vector<glm::vec3> normals(vertices.size(), glm::vec3{0.0f});
-        for (auto& f : faces) {
-            auto& v1 = vertices[f[0]];
-            auto& v2 = vertices[f[1]];
-            auto& v3 = vertices[f[2]];
-
-            auto nml = glm::normalize(glm::cross(v2 - v1, v3 - v1));
-            normals[f[0]] += nml;
-            normals[f[1]] += nml;
-            normals[f[2]] += nml;
-        }
-        for (auto& nml : normals) {
-            nml = glm::normalize(nml);
-        }
+//        vector<glm::vec3> normals(vertices.size(), glm::vec3{0.0f});
+//        for (auto& f : faces) {
+//            auto& v1 = vertices[f[0]];
+//            auto& v2 = vertices[f[1]];
+//            auto& v3 = vertices[f[2]];
+//
+//            auto nml = glm::normalize(glm::cross(v2 - v1, v3 - v1));
+//            normals[f[0]] += nml;
+//            normals[f[1]] += nml;
+//            normals[f[2]] += nml;
+//        }
+//        for (auto& nml : normals) {
+//            nml = glm::normalize(nml);
+//        }
 
         // construct raylib mesh -> model
         Mesh mesh{};
         mesh.triangleCount = static_cast<int>(faces.size());
         mesh.vertexCount = static_cast<int>(vertices.size());
         mesh.vertices = new float[mesh.vertexCount];
-        mesh.normals = new float[mesh.vertexCount];
+//        mesh.normals = new float[mesh.vertexCount];
         mesh.indices = new uint16_t[mesh.triangleCount * 3];
 
         std::memcpy(mesh.vertices, vertices.data(), mesh.vertexCount * sizeof(glm::vec3));
-        std::memcpy(mesh.normals, normals.data(), mesh.vertexCount * sizeof(glm::vec3));
+//        std::memcpy(mesh.normals, normals.data(), mesh.vertexCount * sizeof(glm::vec3));
         std::memcpy(mesh.indices, faces.data(), mesh.triangleCount * sizeof(glm::u16vec3));
         UploadMesh(&mesh, true);   // init vao & vbo
 
-        DlMesh dlmesh(LoadModelFromMesh(mesh));
-
         status = MshT::Success;
-        return dlmesh;
+        auto ptr = std::make_shared<DlMesh>(LoadModelFromMesh(mesh));
+        return ptr;
     }
 
-    DlMesh PlyLoader::load(const std::string &filename, MshT &status) {
+    Ptr_DlMesh PlyLoader::load(const std::string &filename, MshT &status) {
         /// [TODO] ply file loader
         status = MshT::UnImplErr;
-        return DlMesh({});
+        return nullptr;
     }
 }

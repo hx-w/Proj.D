@@ -2,6 +2,7 @@
  * @copyright SCUBot 2023-2024
  */
 
+#include <memory>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -41,14 +42,6 @@ int main() {
 
     Camera camera = {{5.0f, 5.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, 45.0f, 0};
 
-    DentalLib::MeshLoadStatus status;
-    auto dlmesh = DentalLib::MeshLoader::load(
-            "/Users/carol/Desktop/Repo/teeth_morphology_collection/datasets/11_Outside_Defect/case1_zyp/case1_zyp_11_defect.obj",
-//            "/Users/carol/Desktop/Repo/teeth_morphology_collection/datasets/11_Inside/n10_heyulin/n10_inside.obj",
-            status
-    );
-    assert(status == DentalLib::MeshLoadStatus::Success);
-
     // Load basic lighting shader
     Shader shader = LoadShader("resources/shaders/raylib/lighting.vs",
                                "resources/shaders/raylib/lighting.fs");
@@ -59,16 +52,27 @@ int main() {
     float ambientVal[4] = {0.1f, 0.1f, 0.1f, 1.0f};
     SetShaderValue(shader, ambientLoc, ambientVal, SHADER_UNIFORM_VEC4);
 
-    // Assign out lighting shader to model
-    dlmesh.set_shader(shader);
-
     Light light = CreateLight(LIGHT_POINT, Vector3{-2, 10, -2}, Vector3Zero(), YELLOW, shader);
 
+    DentalLib::MeshLoadStatus status;
+    std::vector<std::shared_ptr<DentalLib::DlMesh>> dlmeshes;
     while (!WindowShouldClose()) {
         UpdateCamera(&camera, CAMERA_ORBITAL);
         float cameraPos[3] = {camera.position.x, camera.position.y, camera.position.z};
         SetShaderValue(shader, shader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
         UpdateLightValues(shader, light);
+
+        if (IsFileDropped()) {
+            FilePathList droppedFiles = LoadDroppedFiles();
+            for (int i = 0; i < (int)droppedFiles.count; ++i) {
+                auto ptr_dlmesh = DentalLib::MeshLoader::load(droppedFiles.paths[i], status);
+                assert(status == DentalLib::MeshLoadStatus::Success);
+
+                ptr_dlmesh->set_shader(shader);
+                dlmeshes.emplace_back(ptr_dlmesh);
+            }
+            UnloadDroppedFiles(droppedFiles);
+        }
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -82,7 +86,9 @@ int main() {
         }
 
         BeginMode3D(camera);
-        dlmesh.draw_call();
+        for (auto& dlmesh : dlmeshes) {
+            dlmesh->draw_call();
+        }
         DrawGrid(50, 1.0);
 
         EndMode3D();
