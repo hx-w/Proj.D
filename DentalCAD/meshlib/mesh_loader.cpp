@@ -142,13 +142,14 @@ namespace DentalLib {
         Mesh mesh{};
         mesh.triangleCount = static_cast<int>(faces.size());
         mesh.vertexCount = static_cast<int>(vertices.size());
-        mesh.vertices = new float[mesh.vertexCount];
+        mesh.vertices = new float[mesh.vertexCount * 3];
 //        mesh.normals = new float[mesh.vertexCount];
         mesh.indices = new uint16_t[mesh.triangleCount * 3];
 
-        std::memcpy(mesh.vertices, vertices.data(), mesh.vertexCount * sizeof(glm::vec3));
+
+        std::memcpy(mesh.vertices, vertices.data(), mesh.vertexCount * 3 * sizeof(float));
 //        std::memcpy(mesh.normals, normals.data(), mesh.vertexCount * sizeof(glm::vec3));
-        std::memcpy(mesh.indices, faces.data(), mesh.triangleCount * sizeof(glm::u16vec3));
+        std::memcpy(mesh.indices, faces.data(), mesh.triangleCount * 3 * sizeof(uint16_t));
         UploadMesh(&mesh, true);   // init vao & vbo
 
         status = MshT::Success;

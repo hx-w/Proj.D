@@ -40,7 +40,7 @@ include(${PROJECT_3RDPARTY_DIR}/imgui/imgui.cmake)
 include(${PROJECT_3RDPARTY_DIR}/rlImGui/rlImGui.cmake)
 
 ## 06 [imguizmo] toolkit for 3D transform - 3rdparty
-include(${PROJECT_3RDPARTY_DIR}/imguizmo/imguizmo.cmake)
+# include(${PROJECT_3RDPARTY_DIR}/imguizmo/imguizmo.cmake)
 
 ## 07 [tinynurbs] nurbs c++ - remote
 CPMAddPackage("gh:hx-w/tinynurbs@0.1.1")

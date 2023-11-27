@@ -14,7 +14,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
-#include <glad/glad.h>
+// #include <glad/glad.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -43,8 +43,8 @@ int main() {
     Camera camera = {{5.0f, 5.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, 45.0f, 0};
 
     // Load basic lighting shader
-    Shader shader = LoadShader("resources/shaders/raylib/lighting.vs",
-                               "resources/shaders/raylib/lighting.fs");
+    Shader shader = LoadShader(ASSETS_PATH "/shaders/raylib/lighting.vs",
+                               ASSETS_PATH "/shaders/raylib/lighting.fs");
     // Get some required shader locations
     shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(shader, "viewPos");
 
@@ -57,11 +57,6 @@ int main() {
     DentalLib::MeshLoadStatus status;
     std::vector<std::shared_ptr<DentalLib::DlMesh>> dlmeshes;
     while (!WindowShouldClose()) {
-        UpdateCamera(&camera, CAMERA_ORBITAL);
-        float cameraPos[3] = {camera.position.x, camera.position.y, camera.position.z};
-        SetShaderValue(shader, shader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
-        UpdateLightValues(shader, light);
-
         if (IsFileDropped()) {
             FilePathList droppedFiles = LoadDroppedFiles();
             for (int i = 0; i < (int)droppedFiles.count; ++i) {
@@ -73,6 +68,11 @@ int main() {
             }
             UnloadDroppedFiles(droppedFiles);
         }
+
+        UpdateCamera(&camera, CAMERA_ORBITAL);
+        float cameraPos[3] = {camera.position.x, camera.position.y, camera.position.z};
+        SetShaderValue(shader, shader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
+        UpdateLightValues(shader, light);
 
         BeginDrawing();
         ClearBackground(RAYWHITE);

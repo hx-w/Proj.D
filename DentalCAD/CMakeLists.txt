@@ -15,3 +15,6 @@ add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${${PROJECT_
         ../include/DentalCAD/meshlib/mesh_data.h)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPS} ${LIBS} ${OS_ISSUES})
+
+set(ASSETS_DIR ${PROJECT_SOURCE_DIR}/resources)
+add_compile_definitions(ASSETS_PATH="${ASSETS_DIR}")
