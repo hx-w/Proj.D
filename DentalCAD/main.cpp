@@ -28,6 +28,7 @@
 #include "gui/style.h"
 #include "meshlib/mesh_loader.h"
 #include "meshlib/mesh_data.h"
+#include "renderlib/camera.h"
 
 
 int main() {
@@ -40,7 +41,7 @@ int main() {
     rlImGuiSetup(true);
     DentalGUI::set_custom_imgui_style();
 
-    Camera camera = {{5.0f, 5.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, 45.0f, 0};
+    DentalLib::DlCamera camera;
 
     // Load basic lighting shader
     Shader shader = LoadShader(ASSETS_PATH "/shaders/raylib/lighting.vs",
@@ -69,9 +70,9 @@ int main() {
             UnloadDroppedFiles(droppedFiles);
         }
 
-        UpdateCamera(&camera, CAMERA_ORBITAL);
-        float cameraPos[3] = {camera.position.x, camera.position.y, camera.position.z};
-        SetShaderValue(shader, shader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
+        camera.update();
+
+        SetShaderValue(shader, shader.locs[SHADER_LOC_VECTOR_VIEW], &camera.get_pos(), SHADER_UNIFORM_VEC3);
         UpdateLightValues(shader, light);
 
         BeginDrawing();
@@ -85,11 +86,11 @@ int main() {
             ImGui::End();
         }
 
-        BeginMode3D(camera);
+        camera.begin_draw();
         for (auto& dlmesh : dlmeshes) {
             dlmesh->draw_call();
         }
-        DrawGrid(50, 1.0);
+        camera.end_draw();
 
         EndMode3D();
 

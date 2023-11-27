@@ -2,8 +2,6 @@
 // Created by carol on 2023/11/18.
 //
 
-#include <raylib.h>
-#include <glm/glm.hpp>
 
 #include "meshlib/mesh_data.h"
 

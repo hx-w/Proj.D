@@ -7,9 +7,9 @@
 
 #include <vector>
 #include <glm/glm.hpp>
+#include <raylib.h>
 
-struct Model;  // raylib model
-struct Shader; // raylib shader
+
 namespace DentalLib {
     enum class RenderMode {
         WIREFRAME = 0x00,
@@ -18,7 +18,7 @@ namespace DentalLib {
 
     class DlMesh {
     public:
-        explicit DlMesh(Model /* model */, RenderMode /* rmode */= RenderMode::SOLID);
+        explicit DlMesh(Model /* model */, RenderMode /* rmode */= RenderMode::WIREFRAME);
 
         DlMesh(const DlMesh & /* dlmesh */) = default;
 

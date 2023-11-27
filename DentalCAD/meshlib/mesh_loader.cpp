@@ -3,8 +3,6 @@
 //
 
 #include <fstream>
-#include <raylib.h>
-#include <glm/glm.hpp>
 
 #include "meshlib/mesh_data.h"
 #include "meshlib/mesh_loader.h"
